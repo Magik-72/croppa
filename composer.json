@@ -9,12 +9,12 @@
 	"license": "MIT",
 	"require": {
 		"php": "^7.2.5|^8.0",
-		"illuminate/console": "4 - 8",
-		"illuminate/support": "4 - 8",
-		"illuminate/routing": "4 - 8",
-		"league/flysystem": "~1.0",
-		"symfony/http-foundation": "2 - 5",
-		"symfony/http-kernel": "2 - 5",
+		"illuminate/console": "4 - 9",
+		"illuminate/support": "4 - 9",
+		"illuminate/routing": "4 - 9",
+		"league/flysystem": "^3.0",
+		"symfony/http-foundation": "2 - 6",
+		"symfony/http-kernel": "2 - 6",
 		"weotch/phpthumb": "^1.0.5",
 		"ext-gd": "*"
 	},
