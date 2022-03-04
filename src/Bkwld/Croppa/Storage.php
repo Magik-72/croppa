@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Croppa;
 
 // Deps
-use League\Flysystem\Adapter\Local as Adapter;
+use League\Flysystem\Local\LocalFilesystemAdapter as Adapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FileExistsException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -123,7 +123,7 @@ class Storage {
             && ($instance = $this->app->make($dir))
             && (is_a($instance, 'League\Flysystem\Filesystem')
                 || is_a($instance, 'League\Flysystem\Cached\CachedAdapter'))
-            ) return $instance;
+        ) return $instance;
 
         // Instantiate a new Flysystem instance for local dirs
         return new Filesystem(new Adapter($dir));
@@ -260,16 +260,16 @@ class Storage {
         return $this->justPaths(array_filter($this->getCropsDisk()->listContents($dir),
             function($file) use ($filename) {
 
-            // Don't return the source image, we're JUST getting crops
-            return $file['basename'] != $filename
+                // Don't return the source image, we're JUST getting crops
+                return $file['basename'] != $filename
 
-            // Test that the crop begins with the src's path, that the crop is FOR
-            // the src
-            && strpos($file['basename'], pathinfo($filename, PATHINFO_FILENAME)) === 0
+                    // Test that the crop begins with the src's path, that the crop is FOR
+                    // the src
+                    && strpos($file['basename'], pathinfo($filename, PATHINFO_FILENAME)) === 0
 
-            // Make sure that the crop matches that Croppa file regex
-            && preg_match('#'.URL::PATTERN.'#', $file['path']);
-        }));
+                    // Make sure that the crop matches that Croppa file regex
+                    && preg_match('#'.URL::PATTERN.'#', $file['path']);
+            }));
     }
 
     /**
@@ -280,20 +280,21 @@ class Storage {
      * @return array
      */
     public function listAllCrops($filter = null) {
-        return $this->justPaths(array_filter($this->getCropsDisk()->listContents(null, true),
+        return $this->justPaths(array_filter($this->getCropsDisk()->listContents('', true)->toArray(),
             function($file) use ($filter) {
 
-            // If there was a filter, force it to match
-            if ($filter && !preg_match("#$filter#i", $file['path'])) return;
 
-            // Check that the file matches the pattern and get at the parts to make to
-            // make the path to the src
-            if (!preg_match('#'.URL::PATTERN.'#', $file['path'], $matches)) return false;
-            $src = $matches[1].'.'.$matches[5];
+                // If there was a filter, force it to match
+                if ($filter && !preg_match("#$filter#i", $file['path'])) return;
 
-            // Test that the src file exists
-            return $this->getSrcDisk()->has($src);
-        }));
+                // Check that the file matches the pattern and get at the parts to make to
+                // make the path to the src
+                if (!preg_match('#'.URL::PATTERN.'#', $file['path'], $matches)) return false;
+                $src = $matches[1].'.'.$matches[5];
+
+                // Test that the src file exists
+                return $this->getSrcDisk()->has($src);
+            }));
     }
 
     /**
