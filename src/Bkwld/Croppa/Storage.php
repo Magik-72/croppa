@@ -199,7 +199,10 @@ class Storage
     public function writeCrop($path, $contents)
     {
         try {
-            $this->getCropsDisk()->write($path, $contents);
+            $this->getCropsDisk()->write($path, $contents, [
+                'visibility' => 'public',
+                'directory_visibility' => 'public',
+            ]);
         } catch (FileExistsException $e) {
             // don't throw exception anymore as mentioned in PR #164
         }
